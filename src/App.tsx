@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Prototype1 from './prototypes/Prototype1';
+import Prototype2 from './prototypes/Prototype2';
 
 function Placeholder({ name }: { name: string }) {
   return <div style={{ padding: 48 }}><h2>{name}</h2></div>;
@@ -7,7 +8,7 @@ function Placeholder({ name }: { name: string }) {
 
 const tabs: { label: string; component: React.ReactNode }[] = [
   { label: 'Prototype 1', component: <Prototype1 /> },
-  { label: 'Prototype 2', component: <Placeholder name="Prototype 2" /> },
+  { label: 'Prototype 2', component: <Prototype2 /> },
   { label: 'Prototype 3', component: <Placeholder name="Prototype 3" /> },
   { label: 'Prototype 4', component: <Placeholder name="Prototype 4" /> },
 ];
