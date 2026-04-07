@@ -1,18 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, NavLink } from 'react-router-dom';
 import Prototype1 from './prototypes/Prototype1';
 import Prototype2 from './prototypes/Prototype2';
 import './App.css';
+
+//True = Show hamburger menu with diffrent prototypes
+//False = Hide the menu
+const SHOW_NAV = false;
 
 function Placeholder({ name }: { name: string }) {
   return <div style={{ padding: 48 }}><h2>{name}</h2></div>;
 }
 
 const routes = [
-  { path: '/prototype-1', label: 'Prototype 1', element: <Prototype1 /> },
-  { path: '/prototype-2', label: 'Prototype 2', element: <Prototype2 /> },
-  { path: '/prototype-3', label: 'Prototype 3', element: <Placeholder name="Prototype 3" /> },
-  { path: '/prototype-4', label: 'Prototype 4', element: <Placeholder name="Prototype 4" /> },
+  { path: '/prototype-1',        label: 'Prototype 1',         element: <Prototype1 /> },
+  { path: '/prototype-bundles',  label: 'Prototype — Bundles', element: <Prototype2 /> },
+  { path: '/prototype-3',        label: 'Prototype 3',         element: <Placeholder name="Prototype 3" /> },
+  { path: '/prototype-4',        label: 'Prototype 4',         element: <Placeholder name="Prototype 4" /> },
 ];
 
 function HamburgerMenu() {
@@ -40,7 +44,6 @@ function HamburgerMenu() {
         <span />
         <span />
       </button>
-
       {open && (
         <div className="hamburger-menu">
           {routes.map(r => (
@@ -62,7 +65,7 @@ function HamburgerMenu() {
 export default function App() {
   return (
     <div>
-      <HamburgerMenu />
+      {SHOW_NAV && <HamburgerMenu />}
       <Routes>
         <Route path="/" element={<Navigate to="/prototype-1" replace />} />
         {routes.map(r => (

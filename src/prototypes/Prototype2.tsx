@@ -24,11 +24,10 @@ const suitePrice = 443;
 const separateTotal = products.reduce((sum, p) => sum + p.price, 0);
 const savings = separateTotal - suitePrice;
 
-function Cart({ items, onSwitchToSuite }: { items: CartItem[]; onSwitchToSuite: () => void }) {
+function Cart({ items }: { items: CartItem[] }) {
   const total = items.reduce((sum, item) =>
     item.kind === 'suite' ? sum + suitePrice : sum + item.product.price, 0
   );
-  const allIndividual = items.length === products.length && items.every(i => i.kind === 'product');
 
   return (
     <aside className="p2-cart">
@@ -63,12 +62,7 @@ function Cart({ items, onSwitchToSuite }: { items: CartItem[]; onSwitchToSuite: 
               )
             )}
           </ul>
-          {allIndividual && (
-            <button className="p2-cart-suite-tip" onClick={onSwitchToSuite}>
-              <span className="p2-cart-suite-tip-save">Save ${total - suitePrice}</span>
-              <span className="p2-cart-suite-tip-sub">Switch to Complete Suite →</span>
-            </button>
-          )}
+
           <div className="p2-cart-footer">
             <span className="p2-cart-total-label">Total</span>
             <span className="p2-cart-total-amount">${total} <span className="p2-cart-total-unit">/ year</span></span>
@@ -167,7 +161,7 @@ export default function Prototype2() {
         </div>
       </div>
 
-      <Cart items={cartItems} onSwitchToSuite={toggleSuite} />
+      <Cart items={cartItems} />
     </div>
   );
 }
