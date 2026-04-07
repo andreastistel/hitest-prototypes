@@ -102,11 +102,13 @@
 
 .p2-card-action {
   margin-top: 4px;
-  padding: 9px 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: var(--border_radius-size-8);
   font-size: 14px;
   font-weight: 600;
-  text-align: center;
   background: var(--primitives-neutral-100);
   color: var(--primitives-neutral-600);
   transition: background var(--animations-fade-fast), color var(--animations-fade-fast);
@@ -249,11 +251,13 @@
 }
 
 .p2-suite-action {
-  padding: 11px 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: var(--border_radius-size-8);
   font-size: 15px;
   font-weight: 700;
-  text-align: center;
   background: var(--primitives-brand-700);
   color: var(--primitives-neutral-0);
   transition: background var(--animations-fade-fast);
