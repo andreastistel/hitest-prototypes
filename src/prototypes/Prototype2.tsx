@@ -24,14 +24,11 @@ const suitePrice = 443;
 const separateTotal = products.reduce((sum, p) => sum + p.price, 0);
 const savings = separateTotal - suitePrice;
 
-function Cart({ items, onRemoveProduct, onRemoveSuite }: {
-  items: CartItem[];
-  onRemoveProduct: (id: ProductId) => void;
-  onRemoveSuite: () => void;
-}) {
+function Cart({ items, onSwitchToSuite }: { items: CartItem[]; onSwitchToSuite: () => void }) {
   const total = items.reduce((sum, item) =>
     item.kind === 'suite' ? sum + suitePrice : sum + item.product.price, 0
   );
+  const allIndividual = items.length === products.length && items.every(i => i.kind === 'product');
 
   return (
     <aside className="p2-cart">
@@ -53,14 +50,7 @@ function Cart({ items, onRemoveProduct, onRemoveSuite }: {
                     </div>
                     <span className="p2-cart-item-name">Complete Suite</span>
                   </div>
-                  <div className="p2-cart-item-right">
-                    <span className="p2-cart-item-price">${suitePrice}</span>
-                    <button
-                      className="p2-cart-remove"
-                      onClick={onRemoveSuite}
-                      aria-label="Remove Complete Suite"
-                    >×</button>
-                  </div>
+                  <span className="p2-cart-item-price">${suitePrice}</span>
                 </li>
               ) : (
                 <li key={item.product.id} className="p2-cart-item">
@@ -68,23 +58,21 @@ function Cart({ items, onRemoveProduct, onRemoveSuite }: {
                     <span className={`p2-cart-dot p2-cart-dot--${item.product.id}`} />
                     <span className="p2-cart-item-name">{item.product.name}</span>
                   </div>
-                  <div className="p2-cart-item-right">
-                    <span className="p2-cart-item-price">${item.product.price}</span>
-                    <button
-                      className="p2-cart-remove"
-                      onClick={() => onRemoveProduct(item.product.id)}
-                      aria-label={`Remove ${item.product.name}`}
-                    >×</button>
-                  </div>
+                  <span className="p2-cart-item-price">${item.product.price}</span>
                 </li>
               )
             )}
           </ul>
+          {allIndividual && (
+            <button className="p2-cart-suite-tip" onClick={onSwitchToSuite}>
+              <span className="p2-cart-suite-tip-save">Save ${total - suitePrice}</span>
+              <span className="p2-cart-suite-tip-sub">Switch to Complete Suite →</span>
+            </button>
+          )}
           <div className="p2-cart-footer">
             <span className="p2-cart-total-label">Total</span>
-            <span className="p2-cart-total-amount">${total} <span className="p2-cart-total-unit">/ dev</span></span>
+            <span className="p2-cart-total-amount">${total} <span className="p2-cart-total-unit">/ year</span></span>
           </div>
-          <button className="p2-cart-checkout">Continue →</button>
         </>
       )}
     </aside>
@@ -102,76 +90,84 @@ export default function Prototype2() {
       .map(p => ({ kind: 'product', product: p } as CartItem)),
   ];
 
-  function addProduct(id: ProductId) {
-    setCartProductIds(prev => new Set(prev).add(id));
+  function toggleProduct(id: ProductId) {
+    setCartProductIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
   }
 
-  function removeProduct(id: ProductId) {
-    setCartProductIds(prev => { const n = new Set(prev); n.delete(id); return n; });
+  function toggleSuite() {
+    if (suiteInCart) {
+      setSuiteInCart(false);
+    } else {
+      setCartProductIds(new Set());
+      setSuiteInCart(true);
+    }
   }
-
-  function addSuite() {
-    setCartProductIds(new Set());
-    setSuiteInCart(true);
-  }
-
-  function removeSuite() {
-    setSuiteInCart(false);
-  }
-
-  const productGreyed = (id: ProductId) => suiteInCart || cartProductIds.has(id);
-  const productAdded  = (id: ProductId) => cartProductIds.has(id);
 
   return (
     <div className="p2-page">
       <div className="p2-main">
-        <div className="p2-product-grid">
-          {products.map((p) => (
-            <div key={p.id} className={`p2-product-card${productGreyed(p.id) ? ' in-cart' : ''}`}>
-              <span className="p2-product-name">{p.name}</span>
-              <div className="p2-product-price">
-                <span className="p2-price-amount">${p.price}</span>
-                <span className="p2-price-unit"> / dev</span>
+        <div className="p2-product-grid-wrapper">
+          <div className="p2-product-grid">
+            {products.map((p) => {
+              const selected = cartProductIds.has(p.id);
+              return (
+                <div
+                  key={p.id}
+                  className={`p2-product-card${selected ? ' selected' : ''}${suiteInCart ? ' suite-active' : ''}`}
+                  onClick={() => !suiteInCart && toggleProduct(p.id)}
+                >
+                  <div className="p2-card-top">
+                    <span className="p2-product-name">{p.name}</span>
+                    <span className="p2-check" style={{ visibility: selected ? 'visible' : 'hidden' }}>✓</span>
+                  </div>
+                  <div className="p2-product-price">
+                    <span className="p2-price-amount">${p.price}</span>
+                    <span className="p2-price-unit"> / year</span>
+                  </div>
+                  <div className={`p2-card-action${selected ? ' remove' : ''}${suiteInCart ? ' in-suite' : ''}`}>
+                    {suiteInCart ? 'In suite' : selected ? 'Remove' : 'Add'}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className={`p2-suite-card${suiteInCart ? ' selected' : ''}`} onClick={toggleSuite}>
+            <div className="p2-suite-badge">
+              <span>⭐</span> Best Value — Most Popular
+            </div>
+
+            <div className="p2-suite-card-top">
+              <h2 className="p2-suite-title">Complete Suite — Everything Included</h2>
+              <span className="p2-suite-check" style={{ visibility: suiteInCart ? 'visible' : 'hidden' }}>✓</span>
+            </div>
+
+            <div className="p2-suite-tags">
+              {products.map((p) => (
+                <span key={p.id} className={`p2-tag p2-tag--${p.id}`}>{p.name}</span>
+              ))}
+            </div>
+
+            <div className="p2-suite-pricing">
+              <div className="p2-suite-price">
+                <span className="p2-suite-price-amount">${suitePrice}</span>
+                <span className="p2-suite-price-unit"> / year</span>
               </div>
-              <button
-                className="p2-buy-btn"
-                onClick={() => addProduct(p.id)}
-                disabled={productGreyed(p.id)}
-              >
-                {productAdded(p.id) ? 'Added' : suiteInCart ? 'In suite' : 'Add to cart'}
-              </button>
+              <p className="p2-suite-savings">🎉 Save ${savings} vs buying all separately</p>
             </div>
-          ))}
-        </div>
 
-        <div className={`p2-suite-card${suiteInCart ? ' in-cart' : ''}`}>
-          <div className="p2-suite-badge">
-            <span>⭐</span> Best Value — Most Popular
-          </div>
-
-          <h2 className="p2-suite-title">Complete Suite — Everything Included</h2>
-
-          <div className="p2-suite-tags">
-            {products.map((p) => (
-              <span key={p.id} className={`p2-tag p2-tag--${p.id}`}>{p.name}</span>
-            ))}
-          </div>
-
-          <div className="p2-suite-pricing">
-            <div className="p2-suite-price">
-              <span className="p2-suite-price-amount">${suitePrice}</span>
-              <span className="p2-suite-price-unit"> / dev</span>
+            <div className={`p2-suite-action${suiteInCart ? ' remove' : ''}`}>
+              {suiteInCart ? 'Remove' : 'Add'}
             </div>
-            <p className="p2-suite-savings">🎉 Save ${savings} vs buying all separately</p>
           </div>
-
-          <button className="p2-suite-btn" onClick={addSuite} disabled={suiteInCart}>
-            {suiteInCart ? 'Added to cart' : 'Get the Complete Suite →'}
-          </button>
         </div>
       </div>
 
-      <Cart items={cartItems} onRemoveProduct={removeProduct} onRemoveSuite={removeSuite} />
+      <Cart items={cartItems} onSwitchToSuite={toggleSuite} />
     </div>
   );
 }
