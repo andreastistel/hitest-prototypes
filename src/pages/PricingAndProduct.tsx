@@ -1,18 +1,48 @@
 import React from 'react';
 import { Container, Button } from 'highsoft-ui';
-import { ChevronDown, Trash2 } from 'react-feather';
 import {
-  AltCoreIcon,
-  AltStockIcon,
-  AltMapsIcon,
-  AltGanttIcon,
-  AltDashIcon,
-  AltGridIcon,
-  AltPythonIcon,
-} from '../components/AltIcons';
+  Award,
+  BarChart2,
+  Briefcase,
+  ChevronDown,
+  Code,
+  Columns,
+  GitBranch,
+  Grid,
+  Layout,
+  Map,
+  Tool,
+  Trash2,
+  TrendingUp,
+} from 'react-feather';
 import ShopProgressBar from '../components/ShopProgressBar';
 import '../styles/alt-shop.scss';
 import '../styles/alt-cart.scss';
+
+const SUB_NAV = [
+  { icon: Award, label: 'Pricing and Products', active: true },
+  { icon: Briefcase, label: 'OEM License' },
+  { icon: Columns, label: 'Compare plans' },
+  { icon: Tool, label: 'Custom Projects', badge: 'NEW' },
+] as const;
+
+function AltSubHeader() {
+  return (
+    <div className="alt-sub-header">
+      <div className="alt-sub-header__inner">
+        {SUB_NAV.map(({ icon: Icon, label, active, badge }: { icon: React.ElementType; label: string; active?: boolean; badge?: string }) => (
+          <div key={label} className={`alt-sub-header__item${active ? ' alt-sub-header__item--active' : ''}`}>
+            <Icon size={20} />
+            <span className="alt-sub-header__label">
+              {label}
+              {badge && <span className="alt-sub-header__badge">{badge}</span>}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 // Catalog prices (from the Figma design). This is a static visual copy — the
 // page is frozen in its empty initial state, so nothing is selected.
@@ -74,7 +104,7 @@ function LibraryRow({
       <div className="alt-library-row__price-actions">
         <span className="alt-library-row__price">+ {price} USD</span>
         <span className="alt-library-row__unit">{unit}</span>
-        {/* Add-ons are disabled until Highcharts Core is selected — the
+        {/* Add-ons are disabled until Charts Core is selected — the
             faithful empty-state appearance. */}
         <Button variant="soft" className="alt-add-btn" type="button" disabled>
           Add
@@ -112,10 +142,12 @@ function AltCartEmpty() {
 
 export default function PricingAndProduct() {
   return (
-    <Container className="alt-shop container">
+    <>
+      <AltSubHeader />
+      <Container className="alt-shop container">
       <div className="alt-page-header">
         <div className="alt-page-header__text">
-          <h1 className="alt-page-header__title">Configure your license</h1>
+          <h1 className="alt-page-header__title">Pricing and Products</h1>
           <p className="alt-page-header__subtitle">
             Pick your products and customize your subscription and usage terms to
             fit your needs. Check the <a href="#faq">FAQ</a> below for common
@@ -146,14 +178,14 @@ export default function PricingAndProduct() {
                 </div>
 
                 <div className="alt-products">
-                  {/* Highcharts Core */}
+                  {/* Charts Core */}
                   <div className="alt-product-card alt-product-card--expanded">
                     <div className="alt-product-card__header">
                       <div className="alt-product-card__title">
                         <IconBadge active={false}>
-                          <AltCoreIcon />
+                          <BarChart2 size={16} />
                         </IconBadge>
-                        <span className="alt-product-card__name">Highcharts Core</span>
+                        <span className="alt-product-card__name">Charts Core</span>
                       </div>
                       <div className="alt-product-card__price-actions">
                         <div className="alt-product-card__price">
@@ -173,9 +205,9 @@ export default function PricingAndProduct() {
                           <div className="alt-divider__line" />
                         </div>
                         <div className="alt-library-list">
-                          <LibraryRow icon={<AltStockIcon />} name="Stock" price={PRICES.stock} />
-                          <LibraryRow icon={<AltMapsIcon />} name="Maps" price={PRICES.maps} />
-                          <LibraryRow icon={<AltGanttIcon />} name="Gantt" price={PRICES.gantt} />
+                          <LibraryRow icon={<TrendingUp size={16} />} name="Stock" price={PRICES.stock} />
+                          <LibraryRow icon={<Map size={16} />} name="Maps" price={PRICES.maps} />
+                          <LibraryRow icon={<GitBranch size={16} />} name="Gantt" price={PRICES.gantt} />
                         </div>
                       </div>
 
@@ -188,8 +220,8 @@ export default function PricingAndProduct() {
                         </div>
                         <div className="alt-library-list">
                           <LibraryRow
-                            icon={<AltPythonIcon />}
-                            name="Highcharts for Python"
+                            icon={<Code size={16} />}
+                            name="Python Integration"
                             price={PRICES.python}
                             unit="/yearly"
                           />
@@ -203,7 +235,7 @@ export default function PricingAndProduct() {
                     <div className="alt-product-card__header">
                       <div className="alt-product-card__title">
                         <IconBadge active={false}>
-                          <AltDashIcon />
+                          <Layout size={16} />
                         </IconBadge>
                         <span className="alt-product-card__name">Dashboard</span>
                       </div>
@@ -222,7 +254,7 @@ export default function PricingAndProduct() {
                     <div className="alt-product-card__header">
                       <div className="alt-product-card__title">
                         <IconBadge active={false}>
-                          <AltGridIcon />
+                          <Grid size={16} />
                         </IconBadge>
                         <span className="alt-product-card__name">Grid Pro</span>
                       </div>
@@ -240,23 +272,6 @@ export default function PricingAndProduct() {
             </div>
           </div>
 
-          {/* ── Section 2: What you can do with this license ── */}
-          <div className="alt-card">
-            <div className="alt-card__body">
-              <div className="alt-card__inner">
-                <div className="alt-card__heading">
-                  <h2>What you can do with this license.</h2>
-                  <p>
-                    Here&apos;s a summary of what your license covers based on the
-                    options you&apos;ve selected.
-                  </p>
-                </div>
-                <p className="alt-features__empty">
-                  Select a product above to see what your license covers.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* ── Cart sidebar ── */}
@@ -265,5 +280,6 @@ export default function PricingAndProduct() {
         </div>
       </div>
     </Container>
+    </>
   );
 }

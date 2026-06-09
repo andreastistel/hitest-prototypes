@@ -1,8 +1,24 @@
 .m_QBtq_links > *:not(:nth-child(5)),
 .m_QBtq_buttons,
 .m_QBtq_cta,
-.m_QBtq_gpt,
 .m_QBtq_icons {
   opacity: 0.35 !important;
   pointer-events: none !important;
+}
+
+.m_QBtq_gpt {
+  display: none !important;
+}
+
+/* Replace Highcharts logo with a generic company name */
+.m_QBtq_logo > * {
+  display: none !important;
+}
+
+.m_QBtq_logo::before {
+  content: 'Acme Corp';
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--HS-text-primary-default);
+  white-space: nowrap;
 }

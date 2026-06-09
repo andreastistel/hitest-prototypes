@@ -34,7 +34,7 @@
 .alt-shop {
   display: flex;
   flex-direction: column;
-  padding: 2px 3px 40px;
+  padding: 40px 3px 40px;
   color: var(--HS-text-primary-default);
 
   &__body {
@@ -1401,5 +1401,63 @@
 @media (max-width: 767.98px) {
   .Shop-progress-nav li > span:last-child {
     display: none;
+  }
+}
+
+// ─── Alt sub header ───────────────────────────────────────────────────────────
+.alt-sub-header {
+  width: 100%;
+  background: var(--HS-surface-page-bg, #fff);
+  border-bottom: 1px solid var(--HS-surface-ui-border-100, #e3e3e8);
+
+  &__inner {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 0 20px;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 12px 14px;
+    color: var(--HS-text-primary-default, #18171c);
+    pointer-events: none;
+    position: relative;
+
+    &--active {
+      color: #4a55c9;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #4a55c9;
+        border-radius: 2px 2px 0 0;
+      }
+    }
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  &__badge {
+    background: #d1fae5;
+    color: #065f46;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 4px;
   }
 }
