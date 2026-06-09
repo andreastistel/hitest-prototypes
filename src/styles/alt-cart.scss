@@ -1,0 +1,159 @@
+.AltCart {
+  padding: 48px 32px;
+  border: 1px solid var(--HS-surface-ui-border-100);
+  border-radius: 8px;
+  background: var(--HS-surface-success-background);
+  position: sticky;
+  top: calc(var(--header-bottom) + 32px);
+
+  ul {
+    padding-left: 0;
+    margin-bottom: 0;
+    text-decoration: none;
+
+    li {
+      display: block;
+      text-decoration: none !important;
+    }
+  }
+}
+
+.AltCart h2 {
+  margin: 0;
+}
+
+.AltCart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.AltCart-empty-button {
+  padding: 8px;
+  margin-top: -8px;
+  margin-right: -8px;
+  background: none;
+  color: var(--HS-text-success-Primary);
+  border: none;
+  outline: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  svg {
+    vertical-align: top;
+  }
+}
+
+.AltCart-category {
+  display: block;
+  text-decoration: none;
+}
+
+.AltCart-category-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--HS-text-success-Primary);
+}
+
+.AltCart-item {
+  margin: 16px 0;
+}
+
+.AltCart-item-name {
+  display: flex;
+}
+
+.AltCart-item-name-content {
+  font-size: 16px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.AltCart-item-price {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.AltCart-item-delete-button {
+  font-size: 12px;
+  background: none;
+  border: none;
+  color: var(--HS-text-brand-default-alt);
+  padding: 0 8px;
+  margin-right: -8px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.AltCart hr {
+  margin: 24px 0;
+  color: var(--HS-surface-ui-border-100);
+  opacity: 1;
+}
+
+.AltCart-discount-amount {
+  color: var(--HS-text-danger-default);
+}
+
+.AltCart-total-line {
+  font-size: 12px;
+  margin-bottom: 8px;
+
+  .nok {
+    color: var(--HS-text-secondary-default);
+  }
+}
+
+.AltCart-total {
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+}
+
+.AltCart-total-content {
+  flex: 1;
+}
+
+.AltCart-checkout-button {
+  width: 100%;
+  margin-top: 16px;
+}
+
+@media (max-width: 576px) {
+  .AltCart {
+    padding: 24px 16px;
+    margin-bottom: 24px;
+  }
+
+  .AltCart-header {
+    margin-bottom: 16px;
+  }
+
+  .AltCart-empty-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .AltCart-item {
+    margin-top: 4px;
+  }
+
+  .AltCart hr {
+    margin: 16px 0;
+  }
+
+  .AltCart-total-content {
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 992px) {
+  .AltCart {
+    position: static;
+  }
+}
