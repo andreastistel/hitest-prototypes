@@ -17,9 +17,10 @@
 }
 
 .m_QBtq_logo::before {
-  content: 'Acme Corp';
-  font-size: 18px;
+  content: 'COMPANY NAME';
+  font-size: 13px;
   font-weight: 700;
+  letter-spacing: 3px;
   color: var(--HS-text-primary-default);
   white-space: nowrap;
 }

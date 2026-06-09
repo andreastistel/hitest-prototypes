@@ -7,6 +7,9 @@ import './App.css';
 import PricingAndProduct from './pages/PricingAndProduct';
 
 const RouterLink = ({ href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+  if (href === 'https://www.highcharts.com/') {
+    return <Link to="/" {...(props as any)} />;
+  }
   if (href === 'https://shop.highcharts.com/') {
     return <Link to="/pricing" {...(props as any)} />;
   }
