@@ -13,6 +13,7 @@ const RouterLink = ({ href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorEle
   if (href?.startsWith('/')) {
     return <Link to={href} {...(props as any)} />;
   }
+  // eslint-disable-next-line jsx-a11y/anchor-has-content
   return <a href={href} {...(props as any)} />;
 };
 
