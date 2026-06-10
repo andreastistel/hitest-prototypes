@@ -151,7 +151,7 @@ function AltSubscriptionCard() {
                 <div className="alt-sub-card__extras">
                   <Checkbox checked={true} onChange={() => {}} align="left">
                     <div className="alt-checkbox-row">
-                      <span>Advantage Plus</span>
+                      <span>Support Plus</span>
                     </div>
                   </Checkbox>
                   <Checkbox checked={false} onChange={() => {}} align="left">
