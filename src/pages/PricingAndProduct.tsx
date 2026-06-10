@@ -234,8 +234,8 @@ export default function PricingAndProduct() {
           <h1 className="alt-page-header__title">Pricing and Products</h1>
           <p className="alt-page-header__subtitle">
             Pick your products and customize your subscription and usage terms to
-            fit your needs. Check the <a href="#faq">FAQ</a> below for common
-            questions, or <a href="#contact">contact us</a> if you need a hand.
+            fit your needs. Check the <a href="#faq" onClick={(e) => e.preventDefault()}>FAQ</a> below for common
+            questions, or <a href="#contact" onClick={(e) => e.preventDefault()}>contact us</a> if you need a hand.
           </p>
         </div>
         <ShopProgressBar
