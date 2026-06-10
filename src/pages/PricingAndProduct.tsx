@@ -11,7 +11,6 @@ import {
   Grid,
   Layout,
   Map,
-  PlusCircle,
   Tool,
   Trash2,
   TrendingUp,
@@ -167,16 +166,6 @@ function AltSubscriptionCard() {
                   </Checkbox>
                 </div>
               </div>
-            </div>
-            <div className="alt-info-boxes">
-              <button type="button" className="alt-info-box">
-                <span className="alt-info-box__text">Need help choosing your Advantage plan?</span>
-                <span className="alt-info-box__cta" aria-hidden="true"><PlusCircle size={16} /></span>
-              </button>
-              <button type="button" className="alt-info-box">
-                <span className="alt-info-box__text">What does &quot;lifetime access&quot; mean?</span>
-                <span className="alt-info-box__cta" aria-hidden="true"><PlusCircle size={16} /></span>
-              </button>
             </div>
           </div>
         </div>
