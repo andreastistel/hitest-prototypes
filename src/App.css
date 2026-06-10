@@ -2,7 +2,6 @@
 .m_QBtq_buttons,
 .m_QBtq_cta,
 .m_QBtq_icons {
-  opacity: 0.35 !important;
   pointer-events: none !important;
 }
 

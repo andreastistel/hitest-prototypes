@@ -23,7 +23,7 @@ const RouterLink = ({ href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorEle
 function StartPage() {
   return (
     <Container>
-      <Heading level={1} style={{ textAlign: 'center', fontSize: '4rem' }}>Start page</Heading>
+      <Heading level={1} style={{ textAlign: 'center', fontSize: '7rem', marginTop: '20vh' }}>Start page</Heading>
     </Container>
   );
 }
