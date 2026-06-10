@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Button } from 'highsoft-ui';
+import { Container, Button, Checkbox } from 'highsoft-ui';
 import {
   Award,
   BarChart2,
@@ -11,6 +11,7 @@ import {
   Grid,
   Layout,
   Map,
+  PlusCircle,
   Tool,
   Trash2,
   TrendingUp,
@@ -74,11 +75,11 @@ function IconBadge({
 
 // Product "Add" trigger — looks like the real dropdown trigger but opens
 // nothing (the functional Dropdown is intentionally omitted).
-function AddTrigger({ modifier }: { modifier: 'core' | 'addon' }) {
+function AddTrigger({ modifier, selected = false }: { modifier: 'core' | 'addon'; selected?: boolean }) {
   return (
-    <div className={`alt-dropdown alt-dropdown--${modifier}`}>
+    <div className={`alt-dropdown alt-dropdown--${modifier}${selected ? ' alt-dropdown--selected' : ''}`}>
       <Button variant="success" iconRight={<ChevronDown size={14} />}>
-        Add
+        {selected ? '1 Dev seat' : 'Add'}
       </Button>
     </div>
   );
@@ -114,6 +115,76 @@ function LibraryRow({
   );
 }
 
+function AltSubscriptionCard() {
+  return (
+    <div className="alt-card alt-card--grey">
+      <div className="alt-card__body">
+        <div className="alt-card__inner">
+          <div className="alt-card__heading">
+            <h2>Configure your subscription</h2>
+            <p>Review your plan and add any extras you need.</p>
+          </div>
+          <div className="alt-card__section">
+            <div className="alt-sub-card">
+              <div>
+                <div className="alt-sub-card__header">
+                  <div className="alt-sub-card__title-group">
+                    <span className="alt-sub-card__title">Subscription</span>
+                    <div className="alt-sub-card__icons">
+                      <IconBadge active={true}><BarChart2 size={16} /></IconBadge>
+                    </div>
+                  </div>
+                  <div className="alt-sub-card__price">
+                    <span className="amount">${PRICES.core}</span>
+                    <span className="unit">/year</span>
+                  </div>
+                </div>
+                <p className="alt-sub-card__description">
+                  Gives you access to premium support and the newest version as long as you subscribe.
+                </p>
+              </div>
+              <div>
+                <div className="alt-sub-card__extras-label">
+                  <div className="line" />
+                  <span>Optional extras</span>
+                  <div className="line" />
+                </div>
+                <div className="alt-sub-card__extras">
+                  <Checkbox checked={true} onChange={() => {}} align="left">
+                    <div className="alt-checkbox-row">
+                      <span>Advantage Plus</span>
+                    </div>
+                  </Checkbox>
+                  <Checkbox checked={false} onChange={() => {}} align="left">
+                    <div>
+                      <div className="alt-checkbox-row">
+                        <span>Perpetual - lifetime access to current version</span>
+                      </div>
+                      <div className="alt-checkbox-meta">
+                        Lifetime access to the version you have when your subscription ends.
+                      </div>
+                    </div>
+                  </Checkbox>
+                </div>
+              </div>
+            </div>
+            <div className="alt-info-boxes">
+              <button type="button" className="alt-info-box">
+                <span className="alt-info-box__text">Need help choosing your Advantage plan?</span>
+                <span className="alt-info-box__cta" aria-hidden="true"><PlusCircle size={16} /></span>
+              </button>
+              <button type="button" className="alt-info-box">
+                <span className="alt-info-box__text">What does &quot;lifetime access&quot; mean?</span>
+                <span className="alt-info-box__cta" aria-hidden="true"><PlusCircle size={16} /></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function AltCartEmpty() {
   return (
     <div className="AltCart">
@@ -123,17 +194,30 @@ function AltCartEmpty() {
           <Trash2 aria-hidden />
         </button>
       </div>
+      <ul>
+        <li className="AltCart-category">
+          <ul>
+            <li className="AltCart-item">
+              <div className="AltCart-item-name">
+                <span className="AltCart-item-name-content">Main Product</span>
+              </div>
+            </li>
+            <li className="AltCart-item">
+              <div className="AltCart-item-name">
+                <span className="AltCart-item-name-content">x 1 Developer Seat</span>
+              </div>
+              <div className="AltCart-item-price">565.00 USD / per seat</div>
+            </li>
+          </ul>
+          <hr aria-hidden />
+        </li>
+      </ul>
       <div className="AltCart-category-title">Total</div>
       <div className="AltCart-total">
-        <span className="AltCart-total-content">0.00</span>
+        <span className="AltCart-total-content">565.00</span>
         <span>USD</span>
       </div>
-      <Button
-        variant="success"
-        size={500}
-        className="AltCart-checkout-button btn-a"
-        disabled
-      >
+      <Button variant="success" size={500} className="AltCart-checkout-button btn-a">
         Checkout
       </Button>
     </div>
@@ -182,17 +266,17 @@ export default function PricingAndProduct() {
                   <div className="alt-product-card alt-product-card--expanded">
                     <div className="alt-product-card__header">
                       <div className="alt-product-card__title">
-                        <IconBadge active={false}>
+                        <IconBadge active={true}>
                           <BarChart2 size={16} />
                         </IconBadge>
-                        <span className="alt-product-card__name">Charts Core</span>
+                        <span className="alt-product-card__name">Main Product</span>
                       </div>
                       <div className="alt-product-card__price-actions">
                         <div className="alt-product-card__price">
                           <span className="amount">{PRICES.core} USD</span>
                           <span className="unit">/seat</span>
                         </div>
-                        <AddTrigger modifier="core" />
+                        <AddTrigger modifier="core" selected />
                       </div>
                     </div>
 
@@ -205,9 +289,9 @@ export default function PricingAndProduct() {
                           <div className="alt-divider__line" />
                         </div>
                         <div className="alt-library-list">
-                          <LibraryRow icon={<TrendingUp size={16} />} name="Stock" price={PRICES.stock} />
-                          <LibraryRow icon={<Map size={16} />} name="Maps" price={PRICES.maps} />
-                          <LibraryRow icon={<GitBranch size={16} />} name="Gantt" price={PRICES.gantt} />
+                          <LibraryRow icon={<TrendingUp size={16} />} name="Additional Lib 1" price={PRICES.stock} />
+                          <LibraryRow icon={<Map size={16} />} name="Additional Lib 2" price={PRICES.maps} />
+                          <LibraryRow icon={<GitBranch size={16} />} name="Additional Lib 3" price={PRICES.gantt} />
                         </div>
                       </div>
 
@@ -221,7 +305,7 @@ export default function PricingAndProduct() {
                         <div className="alt-library-list">
                           <LibraryRow
                             icon={<Code size={16} />}
-                            name="Python Integration"
+                            name="Additional Integration 1"
                             price={PRICES.python}
                             unit="/yearly"
                           />
@@ -237,7 +321,7 @@ export default function PricingAndProduct() {
                         <IconBadge active={false}>
                           <Layout size={16} />
                         </IconBadge>
-                        <span className="alt-product-card__name">Dashboard</span>
+                        <span className="alt-product-card__name">Secondary Product 1</span>
                       </div>
                       <div className="alt-product-card__price-actions">
                         <div className="alt-product-card__price">
@@ -256,7 +340,7 @@ export default function PricingAndProduct() {
                         <IconBadge active={false}>
                           <Grid size={16} />
                         </IconBadge>
-                        <span className="alt-product-card__name">Grid Pro</span>
+                        <span className="alt-product-card__name">Secondary Product 2</span>
                       </div>
                       <div className="alt-product-card__price-actions">
                         <div className="alt-product-card__price">
@@ -272,6 +356,7 @@ export default function PricingAndProduct() {
             </div>
           </div>
 
+          <AltSubscriptionCard />
         </div>
 
         {/* ── Cart sidebar ── */}
