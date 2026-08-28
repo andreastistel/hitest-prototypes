@@ -14,6 +14,31 @@ To deploy manually, run:
 npm run deploy
 ```
 
+## Adding a prototype
+
+The header, theme, router and global CSS overrides are shared — a prototype is
+just a page component plus one registry entry.
+
+1. `cp src/pages/_Template.tsx src/pages/MyPrototype.tsx`
+2. Register it in [`src/prototypes.tsx`](src/prototypes.tsx):
+
+   ```tsx
+   {
+     path: '/my-prototype',
+     title: 'My prototype',
+     description: 'One line shown on the start page.',
+     element: <MyPrototype />,
+   }
+   ```
+
+3. Optional: add `src/styles/my-prototype.scss` and import it from the page.
+4. Optional: give the entry `subItems` (`SubHeaderItem[]`) to have the shared
+   `<Header>` render a sub-header while that route is active.
+
+Routes and the start-page index are both generated from that list, so nothing
+else needs touching. `src/App.css` holds the tweaks applied to the shared header
+on every page (disabled links, anonymised logo).
+
 ---
 
 # Getting Started with Create React App

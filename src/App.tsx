@@ -1,40 +1,25 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import { Header, Container, Heading } from 'highsoft-ui';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { Header } from 'highsoft-ui';
 import 'highsoft-ui/css';
 import './App.css';
-import PricingAndProduct from './pages/PricingAndProduct';
-
-const RouterLink = ({ href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-  if (href === 'https://www.highcharts.com/') {
-    return <Link to="/" {...(props as any)} />;
-  }
-  if (href === 'https://shop.highcharts.com/') {
-    return <Link to="/pricing" {...(props as any)} />;
-  }
-  if (href?.startsWith('/')) {
-    return <Link to={href} {...(props as any)} />;
-  }
-  // eslint-disable-next-line jsx-a11y/anchor-has-content
-  return <a href={href} {...(props as any)} />;
-};
-
-function StartPage() {
-  return (
-    <Container>
-      <Heading level={1} style={{ textAlign: 'center', fontSize: '7rem', marginTop: '20vh' }}>Start page</Heading>
-    </Container>
-  );
-}
+import RouterLink from './components/RouterLink';
+import StartPage from './pages/StartPage';
+import { PROTOTYPES } from './prototypes';
 
 function App() {
+  const { pathname } = useLocation();
+  const active = PROTOTYPES.find(
+    ({ path }) => pathname === path || pathname.startsWith(`${path}/`)
+  );
+
   return (
     <div>
-      <Header link={RouterLink} />
+      <Header link={RouterLink} pathname={pathname} subItems={active?.subItems} />
       <Routes>
         <Route path="/" element={<StartPage />} />
-        <Route path="/pricing" element={<PricingAndProduct />} />
+        {PROTOTYPES.map(({ path, element }) => (
+          <Route key={path} path={path} element={element} />
+        ))}
       </Routes>
     </div>
   );
