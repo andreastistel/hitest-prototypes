@@ -1,3 +1,16 @@
+@mixin contact-card {
+  padding: 3rem;
+  border: 1px solid var(--HS-surface-ui-border-100);
+  border-radius: 16px;
+  background: var(--HS-surface-ui-background-0);
+  box-shadow: 0 24px 48px -32px rgb(0 0 0 / 35%);
+
+  @media (max-width: 700px) {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+}
+
 .contact-forms {
   display: grid;
   grid-template-columns: 360px 1fr;
@@ -9,13 +22,145 @@
     gap: 2rem;
   }
 
+  // ── Tabs variant: centred hero, centred tab strip, raised card ──
+  &--tabs {
+    display: block;
+    padding-top: 4.5rem;
+  }
+
+  // Replayed on every form switch — the keyed element remounts.
+  &__animated {
+    animation: contact-forms-rise 0.3s ease-out both;
+  }
+
+  &__hero {
+    max-width: 660px;
+    margin: 0 auto 2.75rem;
+    text-align: center;
+    text-wrap: balance;
+
+    .contact-forms__intro {
+      margin-bottom: 0;
+    }
+  }
+
+  &--tabs .hsui-tabs {
+    justify-content: center;
+    gap: 0.5rem;
+
+    @media (max-width: 800px) {
+      justify-content: flex-start;
+      overflow-x: auto;
+    }
+  }
+
+  &__tab-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    align-items: center;
+    width: 165px;
+    text-align: center;
+
+    .contact-forms__card-blurb {
+      font-size: 0.8rem;
+    }
+  }
+
+  &--tabs &__panel {
+    @include contact-card;
+
+    max-width: 720px;
+    margin: 3rem auto 0;
+  }
+
+  // ── One-form variant: centred hero, a dropdown instead of tabs ──
+  &--one-form {
+    display: block;
+    padding-top: 4.5rem;
+  }
+
+  &--one-form &__panel {
+    @include contact-card;
+
+    max-width: 720px;
+    margin: 3rem auto 0;
+  }
+
+  &--one-form &__panel > .hsui-heading:first-child {
+    margin-top: 0;
+  }
+
+  &__picker-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  &__purpose-label {
+    color: var(--HS-text-secondary-default);
+    font-size: 0.875rem;
+  }
+
+  &--one-form &__purpose-trigger {
+    width: 340px;
+    max-width: 100%;
+    height: 56px;
+    padding: 0 1rem 0 1.25rem;
+    justify-content: space-between;
+    border: 1px solid var(--HS-surface-ui-border-200);
+    border-radius: 10px;
+    background: var(--HS-surface-ui-background-0);
+    color: var(--HS-text-primary-default);
+    font-weight: var(--typography-weight-medium);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
+    transition: all var(--animations-bounce-default);
+
+    // Button wraps label + icon in one centred flex span; stretch it so the
+    // chevron is pushed to the right edge instead of hugging the label.
+    > span {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    &:hover,
+    &[data-state='open'] {
+      border-color: var(--HS-surface-brand-border-300);
+      background: var(--HS-surface-brand-background-50);
+      box-shadow: 0 6px 16px -8px rgb(0 0 0 / 25%);
+    }
+  }
+
+  // The form heading sits directly under the card's top padding.
+  &--tabs &__panel > .hsui-heading:first-child {
+    margin-top: 0;
+  }
+
+  // A full-width submit reads better inside the card.
+  &--tabs &__panel > button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  &__purpose {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    text-align: left;
+  }
+
+  &--sidebar &__panel {
+    @include contact-card;
+
+    max-width: 720px;
+  }
+
   &__sidebar {
-    padding-right: 3rem;
-    border-right: 1px solid var(--HS-surface-ui-border-100);
+    padding-right: 1rem;
 
     @media (max-width: 900px) {
       padding-right: 0;
-      border-right: none;
       border-bottom: 1px solid var(--HS-surface-ui-border-100);
       padding-bottom: 2rem;
     }
@@ -146,12 +291,6 @@
     margin-top: 1.75rem;
   }
 
-  &__recaptcha {
-    display: block;
-    margin-top: 1.25rem;
-    color: var(--HS-text-tertiary-default);
-  }
-
   // No grouped textarea in highsoft-ui — match FormGroup's surface.
   &__textarea {
     display: block;
@@ -177,5 +316,17 @@
 
   &__panel > button {
     margin-top: 1.75rem;
+  }
+}
+
+@keyframes contact-forms-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

@@ -3,36 +3,34 @@ import {
   Button,
   Checkbox,
   CheckboxGroup,
-  Container,
   FormGroup,
   FormRow,
   Heading,
   InputGrouped,
-  Label,
   Link,
   RadioBox,
   RadioBoxGroup,
   SelectGrouped,
   Typography,
 } from 'highsoft-ui';
+import type { HeadingLevel } from 'highsoft-ui';
 import { ExternalLink, HelpCircle } from 'react-feather';
-import '../styles/contact-forms.scss';
+import '../../styles/contact-forms.scss';
 
 /**
- * All four sales forms on one route: a sidebar picks the form, the panel on the
- * right renders it.
+ * The four sales forms and the panel that renders them, shared by every layout
+ * variant in this folder (Sidebar, Tabs, OneForm). A variant decides how you
+ * pick a form; everything below decides what a form *is*.
  *
  * Shared by every form: the contact block, the use-case description, the two
- * consents, the submit button and the reCAPTCHA note. Per form: the copy, the
- * submit label and an optional bespoke `Body` section (see OemLicenseScope).
+ * consents and the submit button. Per form: the copy, the submit label and an
+ * optional bespoke `Body` section (see OemLicenseScope).
  *
  * All tooltip copy on the (?) icons is placeholder — the real strings live in
  * the current forms.
  */
 
 const PRIVACY_POLICY = 'https://www.highcharts.com/privacy-policy';
-const GOOGLE_TERMS = 'https://policies.google.com/terms';
-const LICENSE_AGREEMENT = 'https://www.highcharts.com/license';
 
 /** Opens in a new tab without toggling the checkbox it may sit inside. */
 function ExternalTextLink({ href, children }: { href: string; children: string }) {
@@ -190,9 +188,9 @@ type SelectField = {
   required?: boolean;
 };
 
-type ContactForm = {
+export type ContactForm = {
   id: string;
-  /** Sidebar card */
+  /** Form picker */
   title: string;
   blurb: string;
   /** Panel */
@@ -219,7 +217,7 @@ const SECTORS = [
   'Manufacturing', 'Energy', 'Consulting', 'Other',
 ];
 
-const FORMS: Array<ContactForm> = [
+export const FORMS: Array<ContactForm> = [
   {
     id: 'contact',
     title: 'Contact us',
@@ -267,9 +265,7 @@ const FORMS: Array<ContactForm> = [
         Choose this license if you are bundling Highcharts with hardware and/or software solutions
         designed to be hosted or operated by your clients. E.g. Intranets and other
         behind-the-firewall hosting scenarios, appliances, IoT devices or other embedded systems. We
-        will get back to you with a quote or to discuss how we can tailor licensing to your needs. In
-        the meantime, read the{' '}
-        <ExternalTextLink href={LICENSE_AGREEMENT}>Standard License Agreement</ExternalTextLink>.
+        will get back to you with a quote or to discuss how we can tailor licensing to your needs.
       </>
     ),
     Body: OemLicenseScope,
@@ -310,10 +306,10 @@ function GroupedSelect({
 }
 
 /**
- * Fields every form has in common. They live here rather than in the forms so
- * switching form keeps what you already typed — the point of the page is that
- * you can land on the wrong form and move without starting over. Anything
- * inside a form's own `Body` is form-specific and is discarded on switch.
+ * Fields every form has in common. They live in one place so switching form
+ * keeps what you already typed — the point of the page is that you can land on
+ * the wrong form and move without starting over. Anything inside a form's own
+ * `Body` is form-specific and is discarded on switch.
  */
 const SHARED_FIELDS = {
   email: '',
@@ -327,165 +323,144 @@ const SHARED_FIELDS = {
   marketing: false,
 };
 
-export default function ContactForms() {
-  const [activeId, setActiveId] = useState(FORMS[0].id);
-  const [shared, setShared] = useState(SHARED_FIELDS);
-  const active = FORMS.find(({ id }) => id === activeId) as ContactForm;
-  const { Body } = active;
+type SharedFields = typeof SHARED_FIELDS;
+type UpdateShared = (field: keyof SharedFields, value: string | boolean) => void;
 
-  const update = (field: keyof typeof SHARED_FIELDS, value: string | boolean) =>
+export function useSharedFields() {
+  const [shared, setShared] = useState(SHARED_FIELDS);
+  const update: UpdateShared = (field, value) =>
     setShared((current) => ({ ...current, [field]: value }));
+  return { shared, update };
+}
+
+/** Everything inside a form panel. Variants wrap this in their own layout. */
+export function FormPanel({
+  form,
+  shared,
+  update,
+  showHeader = true,
+  headingLevel = 1,
+}: {
+  form: ContactForm;
+  shared: SharedFields;
+  update: UpdateShared;
+  /** The one-form variant supplies its own heading instead. */
+  showHeader?: boolean;
+  /** Drops to 2 where a variant already has a page-level title above. */
+  headingLevel?: HeadingLevel;
+}) {
+  const { Body } = form;
 
   return (
-    <Container>
-      <div className="contact-forms">
-        <aside className="contact-forms__sidebar">
-          <Heading level={3}>Which form?</Heading>
-          <Typography size={200} className="contact-forms__sidebar-intro">
-            All four reach the same sales team. The right one gets you a useful answer first time.
-          </Typography>
+    <>
+      {showHeader && (
+        <>
+          <Heading level={headingLevel}>{form.heading}</Heading>
+          <Typography className="contact-forms__intro">{form.intro}</Typography>
+        </>
+      )}
 
-          <div className="contact-forms__picker" role="tablist" aria-orientation="vertical">
-            {FORMS.map(({ id, title, blurb }) => (
-              <button
-                key={id}
-                type="button"
-                role="tab"
-                aria-selected={id === activeId}
-                className={`contact-forms__card${id === activeId ? ' contact-forms__card--active' : ''}`}
-                onClick={() => setActiveId(id)}
-              >
-                <span className="contact-forms__card-title">
-                  {title}
-                  {id === activeId && (
-                    <Label variant="brand" iconLeft={false}>
-                      YOU’RE HERE
-                    </Label>
-                  )}
-                </span>
-                <span className="contact-forms__card-blurb">{blurb}</span>
-              </button>
-            ))}
-          </div>
-        </aside>
+      <Heading level={4} className="contact-forms__section">
+        Contact information
+      </Heading>
+      <Typography size={100} className="contact-forms__hint">
+        Fields marked with an asterisk (*) are required.
+      </Typography>
 
-        <section
-          className="contact-forms__panel"
-          role="tabpanel"
-          aria-label={active.heading}
-        >
-          <Heading level={1}>{active.heading}</Heading>
-          <Typography className="contact-forms__intro">{active.intro}</Typography>
-
-          <Heading level={4} className="contact-forms__section">
-            Contact information
-          </Heading>
-          <Typography size={100} className="contact-forms__hint">
-            Fields marked with an asterisk (*) are required.
-          </Typography>
-
-          <FormGroup className="contact-forms__group" onSubmit={(event) => event.preventDefault()}>
-            <InputGrouped
-              label="Email"
-              type="email"
-              required
-              value={shared.email}
-              onChange={(event) => update('email', event.target.value)}
-            />
-            <FormRow>
-              <InputGrouped
-                label="First name"
-                required
-                value={shared.firstName}
-                onChange={(event) => update('firstName', event.target.value)}
-              />
-              <InputGrouped
-                label="Last name"
-                required
-                value={shared.lastName}
-                onChange={(event) => update('lastName', event.target.value)}
-              />
-            </FormRow>
-            <InputGrouped
-              label="Company"
-              required
-              value={shared.company}
-              onChange={(event) => update('company', event.target.value)}
-            />
-            <FormRow>
-              <GroupedSelect
-                field={{
-                  label: 'Country',
-                  placeholder: 'Select Country',
-                  options: COUNTRIES,
-                  required: true,
-                }}
-                value={shared.country}
-                onChange={(value) => update('country', value)}
-              />
-              <GroupedSelect
-                field={{ label: 'Sector', placeholder: 'Select Sector', options: SECTORS }}
-                value={shared.sector}
-                onChange={(value) => update('sector', value)}
-              />
-            </FormRow>
-          </FormGroup>
-
-          {Body && <Body />}
-
-          <Heading level={4} className="contact-forms__section">
-            {active.useCaseTitle}
-          </Heading>
-          {active.useCaseHints.map((hint) => (
-            <Typography key={hint} size={100} className="contact-forms__hint">
-              {hint}
-            </Typography>
-          ))}
-
-          <textarea
-            className="contact-forms__textarea"
-            rows={4}
-            placeholder={active.useCasePlaceholder}
-            aria-label={active.useCasePlaceholder}
-            value={shared.useCase}
-            onChange={(event) => update('useCase', event.target.value)}
+      <FormGroup className="contact-forms__group" onSubmit={(event) => event.preventDefault()}>
+        <InputGrouped
+          label="Email"
+          type="email"
+          required
+          value={shared.email}
+          onChange={(event) => update('email', event.target.value)}
+        />
+        <FormRow>
+          <InputGrouped
+            label="First name"
+            required
+            value={shared.firstName}
+            onChange={(event) => update('firstName', event.target.value)}
           />
+          <InputGrouped
+            label="Last name"
+            required
+            value={shared.lastName}
+            onChange={(event) => update('lastName', event.target.value)}
+          />
+        </FormRow>
+        <InputGrouped
+          label="Company"
+          required
+          value={shared.company}
+          onChange={(event) => update('company', event.target.value)}
+        />
+        <FormRow>
+          <GroupedSelect
+            field={{
+              label: 'Country',
+              placeholder: 'Select Country',
+              options: COUNTRIES,
+              required: true,
+            }}
+            value={shared.country}
+            onChange={(value) => update('country', value)}
+          />
+          <GroupedSelect
+            field={{ label: 'Sector', placeholder: 'Select Sector', options: SECTORS }}
+            value={shared.sector}
+            onChange={(value) => update('sector', value)}
+          />
+        </FormRow>
+      </FormGroup>
 
-          <hr className="contact-forms__divider" />
+      {Body && <Body />}
 
-          <div className="contact-forms__consents">
-            <Checkbox
-              align="left"
-              checked={shared.privacy}
-              onChange={(checked) => update('privacy', checked)}
-            >
-              <span>
-                I have read and accept the{' '}
-                <ExternalTextLink href={PRIVACY_POLICY}>Privacy Policy</ExternalTextLink>. *
-              </span>
-            </Checkbox>
-            <Checkbox
-              align="left"
-              checked={shared.marketing}
-              onChange={(checked) => update('marketing', checked)}
-            >
-              <span>
-                Yes please, I&rsquo;d like to receive useful Highcharts tips and product discounts.
-              </span>
-            </Checkbox>
-          </div>
+      <Heading level={4} className="contact-forms__section">
+        {form.useCaseTitle}
+      </Heading>
+      {form.useCaseHints.map((hint) => (
+        <Typography key={hint} size={100} className="contact-forms__hint">
+          {hint}
+        </Typography>
+      ))}
 
-          <Button variant="success" size={300}>
-            {active.submitLabel}
-          </Button>
+      <textarea
+        className="contact-forms__textarea"
+        rows={4}
+        placeholder={form.useCasePlaceholder}
+        aria-label={form.useCasePlaceholder}
+        value={shared.useCase}
+        onChange={(event) => update('useCase', event.target.value)}
+      />
 
-          <Typography size={50} className="contact-forms__recaptcha">
-            This site is protected by reCAPTCHA and the Google{' '}
-            <ExternalTextLink href={PRIVACY_POLICY}>Privacy Policy</ExternalTextLink> and{' '}
-            <ExternalTextLink href={GOOGLE_TERMS}>Terms of Service</ExternalTextLink> apply.
-          </Typography>
-        </section>
+      <hr className="contact-forms__divider" />
+
+      <div className="contact-forms__consents">
+        <Checkbox
+          align="left"
+          checked={shared.privacy}
+          onChange={(checked) => update('privacy', checked)}
+        >
+          <span>
+            I have read and accept the{' '}
+            <ExternalTextLink href={PRIVACY_POLICY}>Privacy Policy</ExternalTextLink>. *
+          </span>
+        </Checkbox>
+        <Checkbox
+          align="left"
+          checked={shared.marketing}
+          onChange={(checked) => update('marketing', checked)}
+        >
+          <span>
+            Yes please, I&rsquo;d like to receive useful Highcharts tips and product discounts.
+          </span>
+        </Checkbox>
       </div>
-    </Container>
+
+      <Button variant="success" size={300}>
+        {form.submitLabel}
+      </Button>
+    </>
   );
 }

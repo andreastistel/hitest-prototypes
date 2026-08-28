@@ -8,9 +8,10 @@ import { PROTOTYPES } from './prototypes';
 
 function App() {
   const { pathname } = useLocation();
-  const active = PROTOTYPES.find(
-    ({ path }) => pathname === path || pathname.startsWith(`${path}/`)
-  );
+  // Exact match wins, so /contact does not shadow /contact/tabs.
+  const active =
+    PROTOTYPES.find(({ path }) => path === pathname) ??
+    PROTOTYPES.find(({ path }) => pathname.startsWith(`${path}/`));
 
   return (
     <div>
