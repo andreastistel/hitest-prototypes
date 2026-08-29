@@ -4,6 +4,8 @@ import ContactFormsOneForm from './pages/contact-forms/OneForm';
 import ContactFormsSidebar from './pages/contact-forms/Sidebar';
 import ContactFormsTabs from './pages/contact-forms/Tabs';
 import PricingAndProduct from './pages/PricingAndProduct';
+import SoftwareUsage from './pages/SoftwareUsage';
+import SoftwareUsageVariantTwo from './pages/software-usage/VariantTwo';
 
 export type Prototype = {
   /** Route path, e.g. '/pricing'. Also the link used on the start page. */
@@ -25,6 +27,12 @@ const CONTACT_VARIANTS: Array<SubHeaderItem> = [
   { title: 'One form', url: '/contact/one-form' },
 ];
 
+/** The two software-usage layouts, offered as a sub-header on both routes. */
+const USAGE_VARIANTS: Array<SubHeaderItem> = [
+  { title: 'Type 1', url: '/software-usage' },
+  { title: 'Type 2', url: '/software-usage/v2' },
+];
+
 /** Every prototype in one place — App builds the routes and the start page from this. */
 export const PROTOTYPES: Array<Prototype> = [
   {
@@ -32,6 +40,20 @@ export const PROTOTYPES: Array<Prototype> = [
     title: 'Pricing and Products',
     description: 'Shop page with product catalog and cart sidebar.',
     element: <PricingAndProduct />,
+  },
+  {
+    path: '/software-usage',
+    title: 'How will the software be used? — type 1',
+    description: 'Usage and licensing questions, built on a section from the pricing page.',
+    subItems: USAGE_VARIANTS,
+    element: <SoftwareUsage />,
+  },
+  {
+    path: '/software-usage/v2',
+    title: 'How will the software be used? — type 2',
+    description: 'Large radio boxes, a removable list of named applications, and an attached internal-use bar.',
+    subItems: USAGE_VARIANTS,
+    element: <SoftwareUsageVariantTwo />,
   },
   {
     path: '/contact',

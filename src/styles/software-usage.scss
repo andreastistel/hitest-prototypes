@@ -1,0 +1,64 @@
+.software-usage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 650px;
+  padding: 40px 3px;
+  color: var(--HS-text-primary-default);
+}
+
+// Figma 2268:34278. Built on .alt-sub-card (white, 26px padding, 30px gap,
+// 6px radius); only the heavier border and the option row are new.
+.usage-card {
+  border-width: 2px;
+  border-color: var(--HS-surface-ui-border-200);
+
+  &__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.3;
+      margin: 0;
+    }
+  }
+
+  &__options {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+
+    // The library Checkbox already carries the boxed look and the green
+    // selected state — it only needs to share the row evenly.
+    > * {
+      flex: 1 0 0;
+      min-width: 0;
+    }
+  }
+
+  &__option-title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  &__option-meta {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+}
+
+// The library's disabled checkbox differs from the enabled one only by text
+// colour; mute the whole box so it reads as switched off.
+.software-usage .hsui-checkbox:has(input:disabled) {
+  opacity: 0.45;
+}
