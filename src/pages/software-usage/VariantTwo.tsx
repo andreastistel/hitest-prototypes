@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
-import { Container, Checkbox, RadioBox, RadioBoxGroup, InputSolo, Button } from 'highsoft-ui';
+import { Container, Checkbox, RadioBox, InputSolo, Button } from 'highsoft-ui';
 import { Plus, PlusCircle, X } from 'react-feather';
 import '../../styles/alt-shop.scss';
 import '../../styles/software-usage-v2.scss';
+import TerminalSquareIcon from './TerminalSquareIcon';
 
 /**
  * "How will the software be used?" — variant 2, Figma node 495:9492.
@@ -13,23 +14,9 @@ import '../../styles/software-usage-v2.scss';
  * attached under the card.
  */
 
-// Figma exports this as `terminal-square`; feather has no square variant.
-function TerminalSquareIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false">
-      <path
-        d="M4.66667 10L6.66667 8L4.66667 6M8.66667 10H11.3333M5.2 14H10.8C11.9201 14 12.4802 14 12.908 13.782C13.2843 13.5903 13.5903 13.2843 13.782 12.908C14 12.4802 14 11.9201 14 10.8V5.2C14 4.0799 14 3.51984 13.782 3.09202C13.5903 2.71569 13.2843 2.40973 12.908 2.21799C12.4802 2 11.9201 2 10.8 2H5.2C4.0799 2 3.51984 2 3.09202 2.21799C2.71569 2.40973 2.40973 2.71569 2.21799 3.09202C2 3.51984 2 4.0799 2 5.2V10.8C2 11.9201 2 12.4802 2.21799 12.908C2.40973 13.2843 2.71569 13.5903 3.09202 13.782C3.51984 14 4.0799 14 5.2 14Z"
-        stroke="currentColor"
-        strokeWidth="0.886667"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 export default function SoftwareUsageVariantTwo() {
-  const [usage, setUsage] = useState('application');
+  const [website, setWebsite] = useState(false);
+  const [application, setApplication] = useState(true);
   const [internal, setInternal] = useState(false);
   const [draft, setDraft] = useState('');
   const [apps, setApps] = useState<Array<string>>([]);
@@ -48,19 +35,23 @@ export default function SoftwareUsageVariantTwo() {
 
   // Internal use and external use are mutually exclusive — whichever side is
   // in play disables the other, as in type 1.
-  const usagePicked = usage !== '';
+  const usagePicked = website || application;
 
-  // A radio cannot be unpicked, which would leave Internal use only disabled
-  // for good — clicking the selected option clears it instead.
+  function toggle(value: string) {
+    if (value === 'website') setWebsite((on) => !on);
+    else setApplication((on) => !on);
+  }
+
+  // Website and Application(s) can both be on at once, which a radio input
+  // cannot express on its own — the click drives the state instead, and its
+  // default is cancelled so the input never latches itself on.
   function handleOptionClick(e: MouseEvent<HTMLDivElement>) {
     const input = (e.target as HTMLElement)
       .closest('label')
       ?.querySelector<HTMLInputElement>('input[type="radio"]');
-    if (input && input.value === usage) {
-      // Stop the label from re-activating the radio we are clearing.
-      e.preventDefault();
-      setUsage('');
-    }
+    if (!input || input.disabled) return;
+    e.preventDefault();
+    toggle(input.value);
   }
 
   return (
@@ -71,25 +62,32 @@ export default function SoftwareUsageVariantTwo() {
           <p>Gives you access to use the software and Advantage as long as you subscribe</p>
         </div>
 
-        <div onClickCapture={handleOptionClick}>
-          <RadioBoxGroup
-            name="usage"
-            value={usage}
-            onChange={setUsage}
-            className="usage2__options"
+        <div className="usage2__options" onClickCapture={handleOptionClick}>
+          {/* Standalone, each with its own name, so the browser never groups
+              them into a single-choice set. onChange covers the keyboard. */}
+          <RadioBox
+            name="usage-website"
+            value="website"
+            checked={website}
+            onChange={toggle}
+            disabled={internal}
           >
-            <RadioBox value="website" disabled={internal}>
-              <div className="usage2__option-title">Website</div>
-              <div className="usage2__option-meta">Same chart for everyone</div>
-            </RadioBox>
-            <RadioBox value="application" disabled={internal}>
-              <div className="usage2__option-title">Application(s)</div>
-              <div className="usage2__option-meta">Tailored charts for users</div>
-            </RadioBox>
-          </RadioBoxGroup>
+            <div className="usage2__option-title">Website</div>
+            <div className="usage2__option-meta">Same chart for everyone</div>
+          </RadioBox>
+          <RadioBox
+            name="usage-application"
+            value="application"
+            checked={application}
+            onChange={toggle}
+            disabled={internal}
+          >
+            <div className="usage2__option-title">Application(s)</div>
+            <div className="usage2__option-meta">Tailored charts for users</div>
+          </RadioBox>
         </div>
 
-        {usage === 'application' && (
+        {application && (
           <>
             <div className="alt-sub-card__extras-label">
               <div className="line" />

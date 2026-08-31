@@ -5,6 +5,7 @@ import ContactFormsSidebar from './pages/contact-forms/Sidebar';
 import ContactFormsTabs from './pages/contact-forms/Tabs';
 import PricingAndProduct from './pages/PricingAndProduct';
 import SoftwareUsage from './pages/SoftwareUsage';
+import SoftwareUsageVariantThree from './pages/software-usage/VariantThree';
 import SoftwareUsageVariantTwo from './pages/software-usage/VariantTwo';
 
 export type Prototype = {
@@ -31,6 +32,7 @@ const CONTACT_VARIANTS: Array<SubHeaderItem> = [
 const USAGE_VARIANTS: Array<SubHeaderItem> = [
   { title: 'Type 1', url: '/software-usage' },
   { title: 'Type 2', url: '/software-usage/v2' },
+  { title: 'Type 3', url: '/software-usage/v3' },
 ];
 
 /** Every prototype in one place — App builds the routes and the start page from this. */
@@ -54,6 +56,13 @@ export const PROTOTYPES: Array<Prototype> = [
     description: 'Large radio boxes, a removable list of named applications, and an attached internal-use bar.',
     subItems: USAGE_VARIANTS,
     element: <SoftwareUsageVariantTwo />,
+  },
+  {
+    path: '/software-usage/v3',
+    title: 'How will the software be used? — type 3',
+    description: 'Every option on its own full-width row, description right-aligned.',
+    subItems: USAGE_VARIANTS,
+    element: <SoftwareUsageVariantThree />,
   },
   {
     path: '/contact',
